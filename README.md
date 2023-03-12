@@ -1,42 +1,23 @@
-# Nuxt 3 Minimal Starter
+# Кой го казва?
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Общообразователно игра, в която трябва да се опитате да познаете, чий е цитатът на екрана.
 
-## Setup
+# Играйте сега
 
-Make sure to install the dependencies:
+https://koi-go-kazva.vercel.app/
 
-```bash
-# yarn
-yarn install
+![preview](https://i.ibb.co/whGDGjt/Screenshot-2023-03-12-at-19-13-59.png)
 
-# npm
-npm install
+# 7 партийни лидери
 
-# pnpm
-pnpm install
-```
+* Бойко Борисов
+* Кирил Петков
+* Костадин Костадинов
+* Корнелия Нинова
+* Христо Иванов
+* Мустафа Карадайъ
+* Стефан Янев
 
-## Development Server
+# Над 3000 възможни цитата
 
-Start the development server on http://localhost:3000
-
-```bash
-npm run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-npm run build
-```
-
-Locally preview production build:
-
-```bash
-npm run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+Играта засега наброява 3000+ цитата от 48то Народно събрание. (С изклюзение на Бойко Борисов, чиито цитати са от периода 2017-2020, когато е бил министър председател.)
