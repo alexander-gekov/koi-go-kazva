@@ -5,7 +5,9 @@
       <p class="text-right my-2">Резултат: {{ round }}</p>
       <p class="bg-gray-200 text-center w-full flex-1 mx-auto px-4 py-2 mb-10">"{{ currentQuote.quote }}"</p>
       <div class="grid grid-cols-3 gap-4">
-        <button @click="select(person.id)" v-for="person in people" :key="person.id" :disabled="selectedPerson" :class="{'border-gray-700': person.id== selectedPerson}" class="border-2 transition duration-500 border-gray-300 hover:border-gray-700 disabled:text-gray-700 disabled:hover:border-gray-300  p-4 rounded-lg text-center">
+        <button @click="select(person.id)" v-for="person in people" :key="person.id" :disabled="selectedPerson" 
+        :class="{'border-gray-700': person.id == selectedPerson, 'border-red-500': gameOver && person.id == currentQuote.said_by}" 
+        class="border-2 transition duration-500 hover:[&:not(:disabled)]:border-gray-700 border-gray-300 disabled:cursor-not-allowed disabled:text-gray-700 p-4 rounded-lg text-center">
           {{ person.name }} - 
           <span>{{ person.party }}</span>
         </button>
@@ -45,6 +47,9 @@ const select = (person) => {
 }
 
 const nextQuote = () => {
+  if(round === 9){
+    refresh();
+  }
   round.value++;
   selectedPerson.value = null;
 }
