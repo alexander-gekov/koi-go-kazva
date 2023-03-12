@@ -22,7 +22,7 @@
 
 const client = useSupabaseClient();
 const round = ref(0);
-const currentQuote = computed(() => quotes.value[round.value]);
+const currentQuote = computed(() => quotes.value[round.value % 9]);
 const selectedPerson = ref(null)
 const gameOver = ref(false)
 
@@ -47,7 +47,7 @@ const select = (person) => {
 }
 
 const nextQuote = () => {
-  if(round === 9){
+  if(round + 1 === 9){
     refresh();
   }
   round.value++;
