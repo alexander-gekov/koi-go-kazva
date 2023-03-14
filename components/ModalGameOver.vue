@@ -19,7 +19,7 @@
           <div class="flex justify-center py-4 text-white">
                 <!-- We will handle these emits later -->
 	            <button @click="$emit('share')" class="border dark:border-gray-700 border-[#1f1e1e] text-slate-800 dark:text-slate-300 p-4 rounded-lg text-center mr-2">Сподели</button>
-                <button @click="$emit('newGame')" class="dark:bg-[#1f1e1e] dark:text-slate-300 bg-gray-300 p-4 rounded-lg text-center">Опитай пак</button>
+                <button @click="$emit('newGame')" class="dark:bg-[#1f1e1e] dark:text-slate-300 text-slate-800 bg-gray-300 p-4 rounded-lg text-center">Опитай пак</button>
           </div>
         </div>
       </div>

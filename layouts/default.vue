@@ -1,5 +1,6 @@
 <template>
     <div>
+        <link rel="stylesheet" href="toastr.css">
         <main>
             <slot></slot>
         </main>

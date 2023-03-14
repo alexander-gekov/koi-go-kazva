@@ -1,7 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-    modules: ['@nuxtjs/supabase', '@nuxtjs/tailwindcss', '@nuxtjs/color-mode'],
+    modules: ['@nuxtjs/supabase', '@nuxtjs/tailwindcss', '@nuxtjs/color-mode', '@vueuse/nuxt', './modules/socket', '@cssninja/nuxt-toaster'],
     colorMode: {
         classSuffix: ''
-      }
+    },
 })
