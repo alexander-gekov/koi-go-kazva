@@ -107,7 +107,7 @@
   }
 
   const useHint = () => {
-    if(people.value && !hintUsed.value) {
+    if(people.value && !hintUsed.value && !gameOver.value) {
       event('use_hint', { event_category: 'game', event_label: 'use_hint', value: round.value })
       hintUsed.value = true;
     }
