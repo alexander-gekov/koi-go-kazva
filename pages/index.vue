@@ -119,7 +119,7 @@
       const gameId = uuidv4().split('-')[0];
       router.replace({query: {g: gameId}});
       copy(window.location.href);
-      $nt.show('Линкът е копиран в клипборда')
+      toastr('Копирано в клипборда!')
       $socket.emit('message', {
         room: gameId,
         message: 'create',
@@ -129,6 +129,26 @@
       })
     }
   }
+
+  const toastr = (message: string) => {
+    $nt.show({
+        content: message,
+        duration: 1000,
+        theme: {
+          containerClass: 'text-black',
+          wrapperClass: "dark:bg-blue-500 bg-gray-300"
+        }
+      })
+  }
+
+  watch(() => router.currentRoute.value.query.g, (newQuery, oldQuery)=> {
+    // leave room
+    console.log(oldQuery)
+      $socket.emit('message', {
+        room: oldQuery,
+        message: 'leave'
+      });
+  })
 
   onMounted(() => {
     if(router.currentRoute.value.query.g) {

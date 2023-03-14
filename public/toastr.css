@@ -41,6 +41,19 @@
     background-color: #fff;
     box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1);
   }
+
+  .dark-mode + #nt-container [role='alert'] {
+    /* allow toasts to be interactive */
+    pointer-events: auto;
+  
+    /* add styles to toasts */
+    padding: 1rem;
+    border: 1px solid #000;
+    border-radius: 0.5rem;
+    color: white !important;
+    background-color: #1f1f1f !important;
+    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1);
+  }
   
   
   @media (max-width: 767px) {
