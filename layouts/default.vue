@@ -3,7 +3,7 @@
         <main>
             <slot></slot>
         </main>
-        <Footer class="static bottom-0"/>
+        <Footer class="static flex justify-center bottom-0"/>
     </div>
 </template>
 

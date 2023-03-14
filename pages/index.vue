@@ -31,6 +31,11 @@
           </button>
           <button v-if="isCorrect" @click="nextQuote" class="dark:bg-[#287543] bg-green-600 text-slate-300 p-4 rounded-lg text-center">Следващ цитат</button>
           <button v-else-if="!isCorrect && gameOver" @click="newGame" class="dark:bg-[#1f1e1e] dark:text-slate-300 bg-gray-300 p-4 rounded-lg text-center">Опитай пак</button>
+          <ClientOnly>
+            <Teleport to="body">
+              <ModalGameOver :round="round" v-if="modal.show.value" @close="modal.hideModal" @newGame="newGame" />
+            </Teleport>
+          </ClientOnly>
         </div>
       </div>
     </div>
@@ -42,11 +47,13 @@
   
   const colorMode = useColorMode();
   const client = useSupabaseClient<Database>();
+  const modal = useModal();
   const round = ref(0);
   const currentQuote = computed(() => quotes.value ? quotes.value[round.value % 9] : null);
   const selectedPerson: Ref<number | null> = ref(null)
   const gameOver = ref(false)
   const hintUsed = ref(false)
+ 
   
   const isCorrect = computed(() => {
     if (!selectedPerson.value) return false;
@@ -72,6 +79,7 @@
     selectedPerson.value = person_id;
     if(!isCorrect.value) {
       gameOver.value = true;
+      modal.showModal();
     }
   }
   
@@ -86,6 +94,7 @@
   }
   
   const newGame = () => {
+    modal.hideModal();
     selectedPerson.value = null;
     gameOver.value = false;
     hintUsed.value = false;
