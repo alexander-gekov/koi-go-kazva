@@ -24,7 +24,7 @@
         <p class="dark:bg-[#1f1e1e] dark:text-slate-300 bg-gray-200 text-center w-full mx-auto px-4 py-2 mb-10">"{{ currentQuote?.quote }}"</p>
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <button :ref="'button' + person.id" @click="select(person.id)" v-for="person in people" :key="person.id" :disabled="selectedPerson != null || (hintUsed && person.id != currentQuote?.said_by && person.id != randomWrongPerson?.id)" 
-          :class="{'border-gray-700 dark:border-white': person.id == selectedPerson, '!border-red-500 !dark:border-[#752828]': gameOver && person.id == currentQuote?.said_by, 'bg-[#1f1f1f] line-through transform scale-50': hintUsed && person.id != currentQuote?.said_by && person.id != randomWrongPerson?.id}" 
+          :class="{'border-gray-700 dark:border-white': person.id == selectedPerson, '!border-red-500 !dark:border-[#752828]': gameOver && person.id == currentQuote?.said_by, 'dark:bg-[#1f1f1f] line-through transform scale-50': hintUsed && person.id != currentQuote?.said_by && person.id != randomWrongPerson?.id}" 
           class="border-2 transition duration-300 dark:border-gray-700 dark:hover:[&:not(:disabled)]:border-white hover:[&:not(:disabled)]:border-gray-700 border-gray-300 disabled:cursor-not-allowed disabled:text-gray-700 p-4 rounded-lg text-center dark:text-slate-300">
             {{ person.name }} - 
             <span>{{ person.party }}</span>
