@@ -6,7 +6,8 @@ export default (_, nuxt) => {
             cors: {
                 origin: '*',
                 methods: ['GET', 'POST'],
-            }
+            },
+            path: '/socket-io/'	
         })
         const rooms = {};
 
