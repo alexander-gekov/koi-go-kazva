@@ -6,7 +6,7 @@
           <div class="lg:absolute lg:top-0 lg:right-0 flex">
             <Buttons @linkGame="linkGame" @toggleColorMode="toggleColorMode" @useHint="useHint"/>
           </div>
-          <div class="lg:absolute lg:top-0 lg:left-0" v-if="room">Игра: {{ router.currentRoute.value.query.g }}</div>
+          <div class="lg:absolute lg:top-0 lg:left-0" v-if="showRoomId">Игра: {{ router.currentRoute.value.query.g }}</div>
         </div>
         <p class="dark:text-slate-300 text-left lg:text-right my-2">Резултат: <span class="font-bold text-lg">{{ round }}</span></p>
         <p class="dark:bg-[#1f1e1e] dark:text-slate-300 bg-gray-200 text-center w-full mx-auto px-4 py-2 mb-10">"{{ currentQuote?.quote }}"</p>
@@ -49,6 +49,7 @@
   const { $socket, $nt } = useNuxtApp()  
   const connected = ref(false)
   const room = ref("");
+  const showRoomId = ref(false);
   
   const isCorrect = computed(() => {
     if (!selectedPerson.value) return false;
@@ -118,8 +119,6 @@
     if(connected.value) {
       const gameId = uuidv4().split('-')[0];
       router.replace({query: {g: gameId}});
-      copy(window.location.href);
-      toastr('Копирано в клипборда!')
       $socket.emit('message', {
         room: gameId,
         message: 'create',
@@ -127,6 +126,9 @@
           quotes: quotesSupabase.value
         }
       })
+      copy(window.location.href);
+      toastr('Копирано в клипборда!')
+      showRoomId.value = true;
     }
   }
 
@@ -141,31 +143,20 @@
       })
   }
 
-  watch(() => router.currentRoute.value.query.g, (newQuery, oldQuery)=> {
-    // leave room
-    console.log(oldQuery)
-      $socket.emit('message', {
-        room: oldQuery,
-        message: 'leave'
-      });
-  })
-
   onMounted(() => {
     if(router.currentRoute.value.query.g) {
-      console.log(router.currentRoute.value.query.g)
       $socket.emit('message', {
           room: router.currentRoute.value.query.g,
           message: 'join'
       });
       room.value = router.currentRoute.value.query.g.toString();
+      showRoomId.value = true;
     }
     $socket.on('connect', () => {
       connected.value = true;
     })
     $socket.on('message', (message) => {
-      console.log(message);
       if(message.message == 'loadGameData'){
-        console.log(message.data);
         quotesMultiplayer.value = message.data.quotes;
       }
     })
