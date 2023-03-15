@@ -2,7 +2,11 @@ import { Server } from 'socket.io'
 
 export default (_, nuxt) => {
     nuxt.hook('listen', server => {
-        const io = new Server(server)
+        const io = new Server(server, {
+            cors: {
+                origin: 'https://koi-go-kazva-qdvzk.ondigitalocean.app/',
+            }
+        })
         const rooms = {};
 
         nuxt.hook('close', () => io.close())
