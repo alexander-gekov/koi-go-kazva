@@ -4,7 +4,7 @@ export default (_, nuxt) => {
     nuxt.hook('listen', server => {
         const io = new Server(server, {
             cors: {
-                origin: 'https://koi-go-kazva-qdvzk.ondigitalocean.app/',
+                origin: '*',
             }
         })
         const rooms = {};
