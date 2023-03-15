@@ -3,13 +3,13 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
+    "start": "node .output/server/index.mjs",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },
   "engines": {
-    "node": ">=14.0.0",
-    "npm": ">=6.0.0"
+   "node": "16.x"
   },
   "devDependencies": {
     "@cssninja/nuxt-toaster": "^0.2.1",
