@@ -30,4 +30,9 @@
 defineProps<{
   round: number
 }>();
+defineEmits<{
+  close: () => void
+  share: () => void
+  newGame: () => void
+}>();
 </script>

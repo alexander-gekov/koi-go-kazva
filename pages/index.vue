@@ -1,14 +1,17 @@
 <template>
     <div class="dark:bg-[#121212] min-h-fit flex justify-center items-center p-2 lg:p-10">
       <div class="w-full lg:w-2/3 h-full dark:border-[#1f1e1e] border-gray border p-4 shadow-xl rounded-lg flex flex-col">
-        <div class="relative flex justify-center items-center">
-          <h2 class="dark:text-slate-300 text-2xl text-center font-bold mb-5">Кой го казва?</h2>
+        <div class="relative flex-col lg:flex-row flex justify-center items-center dark:text-slate-300">
+          <h2 class="text-2xl text-center font-bold mb-5">Кой го казва?</h2>
           <div class="lg:absolute lg:top-0 lg:right-0 flex">
-            <Buttons @linkGame="linkGame" @toggleColorMode="toggleColorMode" @useHint="useHint"/>
+            <Buttons @linkGame="linkGame" @toggleColorMode="toggleColorMode" @useHint="useHint" @openSettings="openSettings"/>
           </div>
-          <div class="lg:absolute lg:top-0 lg:left-0" v-if="showRoomId">Игра: {{ router.currentRoute.value.query.g }}</div>
+          <div class="lg:absolute mt-2 lg:mt-0 lg:top-0 lg:left-0 flex flex-col" v-if="showRoomId">
+            <div>Игра: {{ router.currentRoute.value.query.g }}</div>
+            <div v-for="player in players" :key="player">🔴 {{ player }}</div>
+          </div>
         </div>
-        <p class="dark:text-slate-300 text-left lg:text-right my-2">Резултат: <span class="font-bold text-lg">{{ round }}</span></p>
+        <p class="dark:text-slate-300 text-center lg:text-right my-2">Резултат: <span class="font-bold text-lg">{{ round }}</span></p>
         <p class="dark:bg-[#1f1e1e] dark:text-slate-300 bg-gray-200 text-center w-full mx-auto px-4 py-2 mb-10">"{{ currentQuote?.quote }}"</p>
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <button :ref="'button' + person.id" @click="select(person.id)" v-for="person in people" :key="person.id" :disabled="selectedPerson != null || (hintUsed && person.id != currentQuote?.said_by && person.id != randomWrongPerson?.id)" 
@@ -21,7 +24,7 @@
           <button v-else-if="!isCorrect && gameOver" @click="newGame" class="dark:bg-[#1f1e1e] dark:text-slate-300 bg-gray-300 p-4 rounded-lg text-center">Опитай пак</button>
           <ClientOnly>
             <Teleport to="body">
-              <ModalGameOver :round="round" v-if="modal.show.value" @close="modal.hideModal" @newGame="newGame" />
+              <component :is="modal.component.value" :round="round" v-if="modal.show.value" @close="modal.hideModal" @newGame="newGame" />
             </Teleport>
           </ClientOnly>
         </div>
@@ -34,6 +37,8 @@
   import { Database } from '~~/types/supabase';
   // @ts-ignore
   import { v4 as uuidv4 } from "uuid";
+  import ModalGameOver from '~~/components/ModalGameOver.vue';
+  import ModalSettings from '~~/components/ModalSettings.vue';
   
   const colorMode = useColorMode();
   const route = useRoute();
@@ -50,6 +55,7 @@
   const connected = ref(false)
   const room = ref("");
   const showRoomId = ref(false);
+  const players = ref([] as string[]);
   
   const isCorrect = computed(() => {
     if (!selectedPerson.value) return false;
@@ -74,12 +80,22 @@
   const { data: people } = await useAsyncData('people', async () =>
     client.from('people').select('*'), { transform: data => data.data}
   )
+
+  const openGameOver = () => {
+    modal.component.value = markRaw(ModalGameOver);
+    modal.showModal();
+  }
+
+  const openSettings = () => {
+    modal.component.value = markRaw(ModalSettings);
+    modal.showModal();
+  }
   
   const select = (person_id: number) => {
     selectedPerson.value = person_id;
     if(!isCorrect.value) {
       gameOver.value = true;
-      modal.showModal();
+      openGameOver();
     }
   }
   
@@ -122,13 +138,18 @@
       $socket.emit('message', {
         room: gameId,
         message: 'create',
+        username: localStorage.getItem('username'),
         data: {
-          quotes: quotesSupabase.value
+          quotes: quotesSupabase.value,
         }
       })
-      copy(window.location.href);
+      copy(`${window.location.origin}/?g=${gameId}`);
       toastr('Копирано в клипборда!')
       showRoomId.value = true;
+      const username = localStorage.getItem('username');
+      if(username && !players.value.includes(username)) {
+        players.value.push(username);
+      }
     }
   }
 
@@ -147,6 +168,7 @@
     if(router.currentRoute.value.query.g) {
       $socket.emit('message', {
           room: router.currentRoute.value.query.g,
+          username: localStorage.getItem('username'),
           message: 'join'
       });
       room.value = router.currentRoute.value.query.g.toString();
@@ -158,6 +180,9 @@
     $socket.on('message', (message) => {
       if(message.message == 'loadGameData'){
         quotesMultiplayer.value = message.data.quotes;
+      }
+      else if (message.message == 'join') {
+        players.value.push(message.username);
       }
     })
   })
