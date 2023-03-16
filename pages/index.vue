@@ -148,6 +148,7 @@
       showRoomId.value = true;
       const username = localStorage.getItem('username');
       if(username && !players.value.includes(username)) {
+        players.value = [];
         players.value.push(username);
       }
     }
@@ -182,7 +183,7 @@
         quotesMultiplayer.value = message.data.quotes;
       }
       else if (message.message == 'join') {
-        players.value.push(message.username);
+        players.value.push(message.data.username);
       }
     })
   })
