@@ -181,11 +181,9 @@
     $socket.on('message', (message) => {
       if(message.message == 'loadGameData'){
         quotesMultiplayer.value = message.data.quotes;
-        players.value.push(message.data.players)
       }
-      if(message.message === 'join'){
-        players.value.push(message.username)
-        toastr(`${message.username} се присъедини към играта!`)
+      else if (message.message == 'join') {
+        players.value.push(message.data.username);
       }
     })
   })
