@@ -147,7 +147,7 @@
       toastr('Копирано в клипборда!')
       showRoomId.value = true;
       const username = localStorage.getItem('username');
-      if(username && !players.value.includes(username)) {
+      if(username) {
         players.value = [];
         players.value.push(username);
       }
@@ -182,8 +182,8 @@
       if(message.message == 'loadGameData'){
         quotesMultiplayer.value = message.data.quotes;
       }
-      else if (message.message == 'join') {
-        players.value.push(message.data.username);
+      else if (message.message == 'loadPlayers') {
+        players.value = message.data;
       }
     })
   })

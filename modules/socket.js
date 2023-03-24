@@ -7,7 +7,7 @@ export default (_, nuxt) => {
                 origin: '*',
                 methods: ['GET', 'POST'],
             },
-            path: '/socket-io/'	
+            path: process.env.NODE_ENV === 'production' ? '/socket-io/' : ''	
         })
         const rooms = {};
 
@@ -19,13 +19,17 @@ export default (_, nuxt) => {
                     case 'create':
                         socket.join(data['room'])
                         rooms[data['room']] = data['data']
-                        rooms[data['room']].owner = socket.id
+                        rooms[data['room']].owner = socket.id;
+                        rooms[data['room']].players = [data['username']];
                         break;
                     case 'join':
                         socket.join(data['room'])
                         const roomId = data['room']
                         if(rooms[roomId]) {
+                            rooms[roomId].players.push(data['username'])
                             socket.emit('message', {message: 'loadGameData', data: rooms[roomId]})
+                            socket.emit('message', {message: 'loadPlayers', data: [... new Set(rooms[roomId].players)]})
+                            socket.to(roomId).emit('message', {message: 'loadPlayers', data: [... new Set(rooms[roomId].players)]})
                         }
                         break
                     case 'leave':
@@ -36,7 +40,7 @@ export default (_, nuxt) => {
                         break
                 }
             })
-
+        
             socket.on('disconnect', () => {
                 console.log('user ' + socket.id + ' disconnected');
               });
