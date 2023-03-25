@@ -24,7 +24,7 @@
           <button v-else-if="!isCorrect && gameOver" @click="newGame" class="dark:bg-[#1f1e1e] dark:text-slate-300 bg-gray-300 p-4 rounded-lg text-center">Опитай пак</button>
           <ClientOnly>
             <Teleport to="body">
-              <component :is="modal.component.value" :round="round" v-if="modal.show.value" @close="modal.hideModal" @newGame="newGame" />
+              <component :is="modal.component.value" :round="round" v-if="modal.show.value" @close="modal.hideModal" @newGame="newGame" @share="shareLink"/>
             </Teleport>
           </ClientOnly>
         </div>
@@ -135,6 +135,7 @@
     if(connected.value) {
       if(route.query){
         copy(`${window.location.origin}/?g=${route.query.g}`);
+        toastr('Копирано в клипборда!')
       } else {
         const gameId = uuidv4().split('-')[0];
         router.replace({query: {g: gameId}});
@@ -157,6 +158,10 @@
         }
       }
     }
+  }
+
+  const shareLink = () => {
+    window.location.replace("https://www.facebook.com/sharer/sharer.php?u=Аз успях да отгатна " + round.value + " политически цитата в играта 'Кой го казва' https://koi-go-kazva.vercel.app/");
   }
 
   const toastr = (message: string) => {
