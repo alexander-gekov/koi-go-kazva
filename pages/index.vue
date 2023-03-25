@@ -33,7 +33,7 @@
   </template>
   
   <script setup lang="ts">
-  import { event } from 'vue-gtag'
+  import { event, query } from 'vue-gtag'
   import { Database } from '~~/types/supabase';
   // @ts-ignore
   import { v4 as uuidv4 } from "uuid";
@@ -74,7 +74,7 @@
   const quotesMultiplayer = ref([]);
   
   const { data: quotesSupabase, refresh } = await useAsyncData('quotes', async () =>
-    client.from('random_quotes').select('*').range(0,9), { transform: data => data.data}
+    client.from('random_quotes').select('*').range(0,3), { transform: data => data.data}
   )
   
   const { data: people } = await useAsyncData('people', async () =>
@@ -133,23 +133,28 @@
 
   const linkGame = () => {
     if(connected.value) {
-      const gameId = uuidv4().split('-')[0];
-      router.replace({query: {g: gameId}});
-      $socket.emit('message', {
-        room: gameId,
-        message: 'create',
-        username: localStorage.getItem('username'),
-        data: {
-          quotes: quotesSupabase.value,
+      if(route.query){
+        copy(`${window.location.origin}/?g=${route.query.g}`);
+      } else {
+        const gameId = uuidv4().split('-')[0];
+        router.replace({query: {g: gameId}});
+        $socket.emit('message', {
+          room: gameId,
+          message: 'create',
+          username: localStorage.getItem('username'),
+          data: {
+            quotes: quotesSupabase.value,
+          }
+        })
+        console.log(quotesSupabase.value);
+        copy(`${window.location.origin}/?g=${gameId}`);
+        toastr('Копирано в клипборда!')
+        showRoomId.value = true;
+        const username = localStorage.getItem('username');
+        if(username) {
+          players.value = [];
+          players.value.push(username);
         }
-      })
-      copy(`${window.location.origin}/?g=${gameId}`);
-      toastr('Копирано в клипборда!')
-      showRoomId.value = true;
-      const username = localStorage.getItem('username');
-      if(username) {
-        players.value = [];
-        players.value.push(username);
       }
     }
   }
@@ -169,7 +174,7 @@
     if(router.currentRoute.value.query.g) {
       $socket.emit('message', {
           room: router.currentRoute.value.query.g,
-          username: localStorage.getItem('username'),
+          username: localStorage.getItem('username') ?? 'Анонимен ' + Math.floor(Math.random() * 1000),
           message: 'join'
       });
       room.value = router.currentRoute.value.query.g.toString();
