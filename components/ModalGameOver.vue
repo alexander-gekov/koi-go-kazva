@@ -16,6 +16,13 @@
           <h3>Твоят резултат е:
           </h3>
           <div class="text-6xl font-bold my-4">{{ round }}</div>
+          <img class="mx-auto" :src="imageSource" width="480" height="250" alt="">
+          <div v-if="players.length > 1" class="text-2xl font-bold my-4">Играчи</div>
+          <div v-if="players" class="flex flex-wrap justify-center">
+            <div v-for="player in players" :key="player" class="flex flex-col items-center">
+              <div class="text-4xl font-bold">{{ player }}</div>
+              <div class="text-2xl font-bold">0</div>
+            </div>
           <div class="flex justify-center py-4 text-white">
                 <!-- We will handle these emits later -->
 	            <button @click="$emit('share')" class="border dark:border-gray-700 border-[#1f1e1e] text-slate-800 dark:text-slate-300 p-4 rounded-lg text-center mr-2">Сподели</button>
@@ -24,15 +31,48 @@
         </div>
       </div>
     </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-defineProps<{
-  round: number
+const props = defineProps<{
+  round: number,
+  players: Array<string>,
+  currentQuote: {
+    id: number | null;
+    quote: string | null;
+    said_by: number | null;
+} | null
 }>();
 defineEmits<{
   close: () => void
   share: () => void
   newGame: () => void
 }>();
+
+const {currentQuote} = toRefs(props);
+
+const imageSource = computed(() => {
+  if(currentQuote.value?.said_by === 1) {
+    return '/kostadin-kostadinov.jpeg';
+  }
+  if(currentQuote.value?.said_by === 2) {
+    return '/kiril-petkov.jpeg';
+  }
+  if(currentQuote.value?.said_by === 3) {
+    return '/ninova-bsp.jpg';
+  }
+  if(currentQuote.value?.said_by === 4) {
+    return '/hristo-ivanov.jpeg';
+  }
+  if(currentQuote.value?.said_by === 5) {
+    return '/boiko-borisov.jpeg';
+  }
+  if(currentQuote.value?.said_by === 6) {
+    return '/mustafa-karadaia.jpeg';
+  }
+  if(currentQuote.value?.said_by === 7) {
+    return '/stefan-qnev.jpg';
+  }
+})
 </script>
