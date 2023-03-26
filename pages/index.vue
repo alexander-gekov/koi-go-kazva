@@ -6,9 +6,9 @@
           <div class="lg:absolute lg:top-0 lg:right-0 flex">
             <Buttons @linkGame="linkGame" @toggleColorMode="toggleColorMode" @useHint="useHint" @openSettings="openSettings"/>
           </div>
-          <div class="lg:absolute mt-2 lg:mt-0 lg:top-0 lg:left-0 flex flex-col" v-if="showRoomId">
+          <div class="lg:absolute mt-2 lg:mt-0 lg:top-0 lg:left-0" v-if="showRoomId">
             <div>Игра: {{ router.currentRoute.value.query.g }}</div>
-            <div v-for="player in players" :key="player">🔴 {{ player }}</div>
+            <div class="grid grid-cols-3" v-for="player in players" :key="player.name">🔴 {{ player.name }} - {{ player.score }}</div>
           </div>
         </div>
         <p class="dark:text-slate-300 text-center lg:text-right my-2">Резултат: <span class="font-bold text-lg">{{ round }}</span></p>
@@ -47,7 +47,7 @@
   const modal = useModal();
   const { copy } = useClipboard();
   const round = ref(0);
-  const currentQuote = computed(() => quotes.value ? quotes.value[round.value % 9] : null);
+  const currentQuote = computed(() => quotes.value ? quotes.value[round.value % 50] : null);
   const selectedPerson: Ref<number | null> = ref(null)
   const gameOver = ref(false)
   const hintUsed = ref(false)
@@ -55,7 +55,7 @@
   const connected = ref(false)
   const room = ref("");
   const showRoomId = ref(false);
-  const players = ref([] as string[]);
+  const players = ref([] as {name: string, score: number, isGameOver: boolean}[]);
   
   const isCorrect = computed(() => {
     if (!selectedPerson.value) return false;
@@ -74,7 +74,7 @@
   const quotesMultiplayer = ref([]);
   
   const { data: quotesSupabase, refresh } = await useAsyncData('quotes', async () =>
-    client.from('random_quotes').select('*').range(0,3), { transform: data => data.data}
+    client.from('random_quotes').select('*').range(0,50), { transform: data => data.data}
   )
   
   const { data: people } = await useAsyncData('people', async () =>
@@ -95,12 +95,24 @@
     selectedPerson.value = person_id;
     if(!isCorrect.value) {
       gameOver.value = true;
+      $socket.emit('message', {
+        message: 'gameOver',
+        room: room.value,
+        score: round.value,
+        username: localStorage.getItem('username'),
+      })
       openGameOver();
     }
+    $socket.emit('message', {
+        message: 'correctAnswer',
+        room: room.value,
+        score: round.value,
+        username: localStorage.getItem('username'),
+    })
   }
   
   const nextQuote = () => {
-    if(round.value + 1 === 9){
+    if(round.value + 1 === 50){
       refresh();
     }
     round.value++;
@@ -133,7 +145,7 @@
 
   const linkGame = () => {
     if(connected.value) {
-      if(route.query){
+      if(route.query.g){
         copy(`${window.location.origin}/?g=${route.query.g}`);
         toastr('Копирано в клипборда!')
       } else {
@@ -154,7 +166,7 @@
         const username = localStorage.getItem('username');
         if(username) {
           players.value = [];
-          players.value.push(username);
+          players.value.push({name: username, score: 0, isGameOver: false});
         }
       }
     }
@@ -194,6 +206,11 @@
       }
       else if (message.message == 'loadPlayers') {
         players.value = message.data;
+        const username = localStorage.getItem('username');
+        if(username && message.data.find((player: any) => player.name == username)?.isGameOver) {
+          gameOver.value = true;
+          openGameOver();
+        }
       }
     })
   })

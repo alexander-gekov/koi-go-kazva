@@ -19,9 +19,9 @@
           <img class="mx-auto" :src="imageSource" width="480" height="250" alt="">
           <div v-if="players.length > 1" class="text-2xl font-bold my-4">Играчи</div>
           <div v-if="players" class="flex flex-wrap justify-center">
-            <div v-for="player in players" :key="player" class="flex flex-col items-center">
-              <div class="text-4xl font-bold">{{ player }}</div>
-              <div class="text-2xl font-bold">0</div>
+            <div v-for="player in players" :key="player.name" class="flex flex-col items-center">
+              <div class="text-4xl font-bold">{{ player.name }}</div>
+              <div class="text-2xl font-bold">{{ player.score }} {{ !player.isGameOver ? '(still playing)' : '' }}</div>
             </div>
           <div class="flex justify-center py-4 text-white">
                 <!-- We will handle these emits later -->
@@ -37,7 +37,7 @@
 <script setup lang="ts">
 const props = defineProps<{
   round: number,
-  players: Array<string>,
+  players: Array<{name: string, score: number, isGameOver: boolean}>,
   currentQuote: {
     id: number | null;
     quote: string | null;
