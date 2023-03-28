@@ -73,7 +73,6 @@ export default (_, nuxt) => {
           case "correctAnswer":
             const room1 = data["room"];
             if (rooms[room1]) {
-              console.log(data);
               rooms[room1].players = rooms[room1].players.map((player) => {
                 if (player.name == data["username"]) {
                   player.score = data["score"];
