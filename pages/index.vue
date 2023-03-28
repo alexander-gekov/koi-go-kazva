@@ -202,20 +202,27 @@ const select = (person_id: number) => {
     gameOver.value = true;
     $socket.emit("message", {
       message: "gameOver",
-      room: room.value,
+      room:
+        room.value != ""
+          ? room.value
+          : router.currentRoute.value.query.g?.toString(),
       score: score.value,
       username: localStorage.getItem("username"),
     });
     openGameOver();
+  } else {
+    score.value += hintUsed.value ? 5 : 10;
+    console.log("score", score.value);
+    $socket.emit("message", {
+      message: "correctAnswer",
+      room:
+        room.value != ""
+          ? room.value
+          : router.currentRoute.value.query.g?.toString(),
+      score: score.value,
+      username: localStorage.getItem("username"),
+    });
   }
-  score.value += hintUsed.value ? 5 : 10;
-  console.log("score", score.value);
-  $socket.emit("message", {
-    message: "correctAnswer",
-    room: room.value,
-    score: score.value,
-    username: localStorage.getItem("username"),
-  });
 };
 
 const nextQuote = () => {

@@ -120,7 +120,7 @@
 <script setup lang="ts">
 import { useStorage } from "@vueuse/core";
 defineProps<{
-  round: number;
+  score: number;
 }>();
 defineEmits<{
   close: () => void;
