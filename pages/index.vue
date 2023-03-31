@@ -3,10 +3,10 @@
     class="dark:bg-[#121212] min-h-fit flex justify-center items-center p-2 lg:p-10"
   >
     <div
-      class="w-full lg:w-2/3 h-full dark:border-[#1f1e1e] border-gray border p-4 shadow-xl rounded-lg flex flex-col"
+      class="w-full 2xl:w-2/3 h-full dark:border-[#1f1e1e] border-gray border p-4 shadow-xl rounded-lg flex flex-col"
     >
       <div
-        class="relative flex-col lg:flex-row flex justify-center items-center dark:text-slate-300"
+        class="relative flex-col 2xl:flex-row flex justify-center items-center dark:text-slate-300"
       >
         <h2
           @click="goToHome"
@@ -14,7 +14,7 @@
         >
           Кой го казва?
         </h2>
-        <div class="lg:absolute lg:top-0 lg:right-0 flex">
+        <div class="2xl:absolute 2xl:top-0 2xl:right-0 flex">
           <Buttons
             @linkGame="linkGame"
             @toggleColorMode="toggleColorMode"
@@ -22,17 +22,9 @@
             @openSettings="openSettings"
           />
         </div>
-        <div
-          class="lg:absolute mt-2 lg:mt-0 lg:top-0 lg:left-0"
-          v-if="showRoomId"
-        >
-          <div>Игра: {{ router.currentRoute.value.query.g }}</div>
-          <div v-for="player in players" :key="player.name">
-            🔴 {{ player.name }} - {{ player.score }}
-          </div>
-        </div>
+        <MultiplayerInfo :show-room-id="showRoomId" :players="players" />
       </div>
-      <p class="dark:text-slate-300 text-center lg:text-right my-2">
+      <p class="dark:text-slate-300 text-center 2xl:text-right my-2">
         Резултат: <span class="font-bold text-lg">{{ score }}</span>
       </p>
       <p
