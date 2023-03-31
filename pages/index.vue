@@ -49,8 +49,11 @@
                 gameOver && person?.id == currentQuote?.said_by,
               'dark:bg-[#1f1f1f] line-through transform scale-50':
                 hintUsed && person?.id != currentQuote?.said_by,
+              'bg-cover bg-center': true, // add the bg-cover and bg-center classes here
+              'bg-image': true,
             }"
-            class="border-2 transition duration-300 dark:border-gray-700 dark:hover:[&:not(:disabled)]:border-white hover:[&:not(:disabled)]:border-gray-700 border-gray-300 disabled:cursor-not-allowed disabled:text-gray-700 p-4 rounded-lg text-center dark:text-slate-300"
+            :style="`background-image: url(${imageSource(person?.id as number)}); background-position: center top;`"
+            class="border-8 transition duration-300 dark:border-gray-700 dark:hover:[&:not(:disabled)]:border-white hover:[&:not(:disabled)]:border-gray-700 border-gray-300 disabled:cursor-not-allowed p-4 py-28 rounded-lg text-center text-white text-2xl outline-title font-extrabold"
           >
             {{ person?.name }} -
             <span>{{ person?.party }}</span>
@@ -163,6 +166,10 @@ const randomWrongPerson = computed(() => {
 const quotes = computed(() =>
   room.value != "" ? quotesMultiplayer.value : quotesSupabase.value
 );
+
+const imageSource = (id: number) => {
+  return [3, 7].includes(id) ? `${id}.jpg` : `${id}.jpeg`;
+};
 
 const quotesMultiplayer = ref([]);
 
@@ -345,3 +352,12 @@ onMounted(() => {
   });
 });
 </script>
+
+<style scoped>
+.outline-title {
+  -webkit-text-stroke: 1px black;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+</style>

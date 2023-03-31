@@ -1,8 +1,10 @@
 <template>
   <div class="absolute inset-0 overflow-y-hidden bg-black bg-opacity-80">
-    <div class="flex items-start justify-center min-h-screen mt-10 text-center">
+    <div
+      class="flex items-start justify-center min-h-screen h-max mt-10 text-center"
+    >
       <div
-        class="relative dark:bg-[#121212] overflow-hidden dark:border dark:border-slate-700 mx-1 bg-white dark:text-slate-300 text-black rounded-lg text-center shadow-xl p-6 w-full lg:w-1/2"
+        class="relative dark:bg-[#121212] h-full overflow-hidden dark:border dark:border-slate-700 mx-1 bg-white dark:text-slate-300 text-black rounded-lg text-center shadow-xl p-6 w-full lg:w-1/2"
         role="dialog"
         aria-modal="true"
       >

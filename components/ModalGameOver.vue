@@ -91,26 +91,8 @@ defineEmits<{
 const { currentQuote } = toRefs(props);
 
 const imageSource = computed(() => {
-  if (currentQuote.value?.said_by === 1) {
-    return "/kostadin-kostadinov.jpeg";
-  }
-  if (currentQuote.value?.said_by === 2) {
-    return "/kiril-petkov.jpeg";
-  }
-  if (currentQuote.value?.said_by === 3) {
-    return "/ninova-bsp.jpg";
-  }
-  if (currentQuote.value?.said_by === 4) {
-    return "/hristo-ivanov.jpeg";
-  }
-  if (currentQuote.value?.said_by === 5) {
-    return "/boiko-borisov.jpeg";
-  }
-  if (currentQuote.value?.said_by === 6) {
-    return "/mustafa-karadaia.jpeg";
-  }
-  if (currentQuote.value?.said_by === 7) {
-    return "/stefan-qnev.jpg";
-  }
+  const id = currentQuote.value?.said_by;
+  if (!id) return null;
+  return [3, 7].includes(id) ? `/${id}.jpg` : `/${id}.jpeg`;
 });
 </script>
