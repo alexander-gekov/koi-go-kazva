@@ -3,10 +3,10 @@
     class="dark:bg-[#121212] min-h-fit flex justify-center items-center p-2 lg:p-10"
   >
     <div
-      class="w-full lg:w-2/3 h-full dark:border-[#1f1e1e] border-gray border p-4 shadow-xl rounded-lg flex flex-col"
+      class="w-full 2xl:w-2/3 h-full dark:border-[#1f1e1e] border-gray border p-4 shadow-xl rounded-lg flex flex-col"
     >
       <div
-        class="relative flex-col lg:flex-row flex justify-center items-center dark:text-slate-300"
+        class="relative flex-col 2xl:flex-row flex justify-center items-center dark:text-slate-300"
       >
         <h2
           @click="goToHome"
@@ -14,7 +14,7 @@
         >
           Кой го казва?
         </h2>
-        <div class="lg:absolute lg:top-0 lg:right-0 flex">
+        <div class="2xl:absolute 2xl:top-0 2xl:right-0 flex">
           <Buttons
             @linkGame="linkGame"
             @toggleColorMode="toggleColorMode"
@@ -22,17 +22,9 @@
             @openSettings="openSettings"
           />
         </div>
-        <div
-          class="lg:absolute mt-2 lg:mt-0 lg:top-0 lg:left-0"
-          v-if="showRoomId"
-        >
-          <div>Игра: {{ router.currentRoute.value.query.g }}</div>
-          <div v-for="player in players" :key="player.name">
-            🔴 {{ player.name }} - {{ player.score }}
-          </div>
-        </div>
+        <MultiplayerInfo :show-room-id="showRoomId" :players="players" />
       </div>
-      <p class="dark:text-slate-300 text-center lg:text-right my-2">
+      <p class="dark:text-slate-300 text-center 2xl:text-right my-2">
         Резултат: <span class="font-bold text-lg">{{ score }}</span>
       </p>
       <p
@@ -57,8 +49,11 @@
                 gameOver && person?.id == currentQuote?.said_by,
               'dark:bg-[#1f1f1f] line-through transform scale-50':
                 hintUsed && person?.id != currentQuote?.said_by,
+              'bg-cover bg-center': true, // add the bg-cover and bg-center classes here
+              'bg-image': true,
             }"
-            class="border-2 transition duration-300 dark:border-gray-700 dark:hover:[&:not(:disabled)]:border-white hover:[&:not(:disabled)]:border-gray-700 border-gray-300 disabled:cursor-not-allowed disabled:text-gray-700 p-4 rounded-lg text-center dark:text-slate-300"
+            :style="`background-image: url(${imageSource(person?.id as number)}); background-position: center top;`"
+            class="border-8 transition duration-300 dark:border-gray-700 dark:hover:[&:not(:disabled)]:border-white hover:[&:not(:disabled)]:border-gray-700 border-gray-300 disabled:cursor-not-allowed p-4 py-28 rounded-lg text-center text-white text-2xl outline-title font-extrabold"
           >
             {{ person?.name }} -
             <span>{{ person?.party }}</span>
@@ -171,6 +166,10 @@ const randomWrongPerson = computed(() => {
 const quotes = computed(() =>
   room.value != "" ? quotesMultiplayer.value : quotesSupabase.value
 );
+
+const imageSource = (id: number) => {
+  return [3, 7].includes(id) ? `${id}.jpg` : `${id}.jpeg`;
+};
 
 const quotesMultiplayer = ref([]);
 
@@ -353,3 +352,12 @@ onMounted(() => {
   });
 });
 </script>
+
+<style scoped>
+.outline-title {
+  -webkit-text-stroke: 1px black;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+</style>
