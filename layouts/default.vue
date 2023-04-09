@@ -2,7 +2,7 @@
   <div>
     <link rel="stylesheet" href="toastr.css" />
     <main>
-      <NavBar />
+      <!-- <NavBar /> -->
       <slot></slot>
     </main>
     <Footer class="static flex justify-center bottom-0" />
