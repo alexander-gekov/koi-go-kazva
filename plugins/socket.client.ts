@@ -1,11 +1,18 @@
-import io from 'socket.io-client'
+import io from "socket.io-client";
 
 export default defineNuxtPlugin(() => {
-    const socket = process.env.NODE_ENV === 'production' ? io('https://coral-app-lhhho.ondigitalocean.app', {reconnection: false, secure:true, rejectUnauthorized: false}) : io()
+  const socket =
+    process.env.NODE_ENV === "production"
+      ? io("https://koi-go-kazva-ws-qn7ap.ondigitalocean.app", {
+          reconnection: false,
+          secure: true,
+          rejectUnauthorized: false,
+        })
+      : io();
 
-    return {
-        provide: {
-            socket: socket
-        }
-    }
-})
+  return {
+    provide: {
+      socket: socket,
+    },
+  };
+});
